@@ -6,10 +6,6 @@ import java.util.Random;
 import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
-/**
- * gkislin
- * 03.07.2016
- */
 public class MatrixUtil {
 
     public static int[][] concurrentMultiplyStreams(int[][] matrixA, int[][] matrixB, int threadNumber)
@@ -111,6 +107,25 @@ public class MatrixUtil {
                     sum += rowA[k] * columnB[k];
                 }
                 matrixC[row][col] = sum;
+            }
+        }
+        return matrixC;
+    }
+
+    public static int[][] singleThreadMultiplyOpt2(int[][] matrixA, int[][] matrixB) {
+        final int matrixSize = matrixA.length;
+        final int[][] matrixC = new int[matrixSize][matrixSize];
+
+        for (int row = 0; row < matrixSize; row++) {
+            final int[] rowA = matrixA[row];
+            final int[] rowC = matrixC[row];
+
+            for (int idx = 0; idx < matrixSize; idx++) {
+                final int elA = rowA[idx];
+                final int[] rowB = matrixB[idx];
+                for (int col = 0; col < matrixSize; col++) {
+                    rowC[col] += elA * rowB[col];
+                }
             }
         }
         return matrixC;
