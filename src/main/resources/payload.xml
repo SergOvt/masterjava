@@ -8,9 +8,12 @@
             </Group>
         </Project>
         <Project name="masterjava" description="Project MasterJava">
-            <Group type="CURRENT" name="masterjava01">
+            <Group type="FINISHED" name="masterjava01">
                 <User flag="superuser" city="spb" email="admin@javaops.ru" fullName="Admin"/>
                 <User flag="deleted" city="spb" email="mail@yandex.ru" fullName="Deleted"/>
+            </Group>
+            <Group type="CURRENT" name="masterjava02">
+                <User flag="superuser" city="mnsk" email="admin1@javaops.ru" fullName="Admin1"/>
             </Group>
         </Project>
     </Projects>
