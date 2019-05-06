@@ -9,21 +9,21 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 public class JaxbMarshaller {
-    private Marshaller marshaller;
+    private static final ThreadLocal<Marshaller> MARSHALLER = new ThreadLocal<>();
 
     public JaxbMarshaller(JAXBContext ctx) throws JAXBException {
-        marshaller = ctx.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-        marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
+        MARSHALLER.set(ctx.createMarshaller());
+        MARSHALLER.get().setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        MARSHALLER.get().setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+        MARSHALLER.get().setProperty(Marshaller.JAXB_FRAGMENT, true);
     }
 
     public void setProperty(String prop, Object value) throws PropertyException {
-        marshaller.setProperty(prop, value);
+        MARSHALLER.get().setProperty(prop, value);
     }
 
-    public synchronized void setSchema(Schema schema) {
-        marshaller.setSchema(schema);
+    public void setSchema(Schema schema) {
+        MARSHALLER.get().setSchema(schema);
     }
 
     public String marshal(Object instance) throws JAXBException {
@@ -32,8 +32,8 @@ public class JaxbMarshaller {
         return sw.toString();
     }
 
-    public synchronized void marshal(Object instance, Writer writer) throws JAXBException {
-        marshaller.marshal(instance, writer);
+    public void marshal(Object instance, Writer writer) throws JAXBException {
+        MARSHALLER.get().marshal(instance, writer);
     }
 
 }

@@ -10,29 +10,29 @@ import java.io.Reader;
 import java.io.StringReader;
 
 public class JaxbUnmarshaller {
-    private Unmarshaller unmarshaller;
+    private static final ThreadLocal<Unmarshaller> UNMARSHALLER = new ThreadLocal<>();
 
     public JaxbUnmarshaller(JAXBContext ctx) throws JAXBException {
-        unmarshaller = ctx.createUnmarshaller();
+        UNMARSHALLER.set(ctx.createUnmarshaller());
     }
 
-    public synchronized void setSchema(Schema schema) {
-        unmarshaller.setSchema(schema);
+    public void setSchema(Schema schema) {
+        UNMARSHALLER.get().setSchema(schema);
     }
 
-    public synchronized Object unmarshal(InputStream is) throws JAXBException {
-        return unmarshaller.unmarshal(is);
+    public Object unmarshal(InputStream is) throws JAXBException {
+        return UNMARSHALLER.get().unmarshal(is);
     }
 
-    public synchronized Object unmarshal(Reader reader) throws JAXBException {
-        return unmarshaller.unmarshal(reader);
+    public Object unmarshal(Reader reader) throws JAXBException {
+        return UNMARSHALLER.get().unmarshal(reader);
     }
 
     public Object unmarshal(String str) throws JAXBException {
         return unmarshal(new StringReader(str));
     }
 
-    public synchronized <T> T unmarshal(XMLStreamReader reader, Class<T> elementClass) throws JAXBException {
-        return unmarshaller.unmarshal(reader, elementClass).getValue();
+    public <T> T unmarshal(XMLStreamReader reader, Class<T> elementClass) throws JAXBException {
+        return UNMARSHALLER.get().unmarshal(reader, elementClass).getValue();
     }
 }
