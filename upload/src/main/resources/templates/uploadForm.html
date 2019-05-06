@@ -1,0 +1,33 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:if="${message}">
+    <h2 th:text="${message}"/>
+</div>
+
+<div>
+    <form method="POST" enctype="multipart/form-data" action="/">
+        <table>
+            <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
+            <tr><td></td><td><input type="submit" value="Get Users" /></td></tr>
+        </table>
+    </form>
+</div>
+
+<div th:if="${message}">
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>E-mail</th>
+            <th>Flag</th>
+        </tr>
+        <tr th:each="user: ${users}">
+            <td th:text="${user.getValue()}"></td>
+            <td th:text="${user.getEmail()}"></td>
+            <td th:text="${user.getFlag()}"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
