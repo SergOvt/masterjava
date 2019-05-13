@@ -1,3 +1,4 @@
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Upload XML</title>
@@ -9,7 +10,14 @@
         <input type="file" name="fileToUpload" id="fileToUpload"><br/>
     </p>
     <p>
+        Input chank size
+        <input th:value="${chankSize}" type="number" name="chankSize" id="chankSize"><br/>
+    </p>
+    <p>
         <input type="submit" value="Upload" name="submit">
+    </p>
+    <p>
+    <h4><a href="users">Get Users from DB</a></h4>
     </p>
 </form>
 </body>
