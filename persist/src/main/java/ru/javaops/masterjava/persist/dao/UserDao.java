@@ -11,17 +11,7 @@ import ru.javaops.masterjava.persist.model.User;
 import java.util.List;
 
 @RegisterMapperFactory(EntityMapperFactory.class)
-public abstract class UserDao implements AbstractDao {
-
-    public User insert(User user) {
-        if (user.isNew()) {
-            int id = insertGeneratedId(user);
-            user.setId(id);
-        } else {
-            insertWitId(user);
-        }
-        return user;
-    }
+public abstract class UserDao implements AbstractDao<User> {
 
     @SqlQuery("SELECT nextval('user_seq')")
     abstract int getNextVal();
@@ -29,16 +19,18 @@ public abstract class UserDao implements AbstractDao {
     @Transaction
     public int getSeqAndSkip(int step) {
         int id = getNextVal();
-        DBIProvider.getDBI().useHandle(h -> h.execute("ALTER SEQUENCE user_seq RESTART WITH " + (id + step)));
+        DBIProvider.getDBI().useHandle(h -> h.execute("SELECT setval('user_seq', " + (id + step - 1) + ")"));
         return id;
     }
 
     @SqlUpdate("INSERT INTO users (full_name, email, flag, city_id) VALUES (:fullName, :email, CAST(:flag AS USER_FLAG), :cityId) ")
     @GetGeneratedKeys
-    abstract int insertGeneratedId(@BindBean User user);
+    @Override
+    public abstract int insertGeneratedId(@BindBean User user);
 
-    @SqlUpdate("INSERT INTO users (id, full_name, email, flag, city_id) VALUES (:id, :fullName, :email, CAST(:flag AS USER_FLAG)), :cityId) ")
-    abstract void insertWitId(@BindBean User user);
+    @SqlUpdate("INSERT INTO users (id, full_name, email, flag, city_id) VALUES (:id, :fullName, :email, CAST(:flag AS USER_FLAG), :cityId) ")
+    @Override
+    public abstract void insertWithId(@BindBean User user);
 
     @SqlQuery("SELECT * FROM users ORDER BY full_name, email LIMIT :it")
     public abstract List<User> getWithLimit(@Bind int limit);
@@ -49,7 +41,7 @@ public abstract class UserDao implements AbstractDao {
     public abstract void clean();
 
     //    https://habrahabr.ru/post/264281/
-    @SqlBatch("INSERT INTO users (id, full_name, email, flag, city_id) VALUES (:id, :fullName, :email, CAST(:flag AS USER_FLAG), :cityId)" +
+    @SqlBatch("INSERT INTO users (id, full_name, email, flag, city_id) VALUES (:id, :fullName, :email, CAST(:flag AS USER_FLAG), :cityId) " +
             "ON CONFLICT DO NOTHING")
 //            "ON CONFLICT (email) DO UPDATE SET full_name=:fullName, flag=CAST(:flag AS USER_FLAG)")
     public abstract int[] insertBatch(@BindBean List<User> users, @BatchChunkSize int chunkSize);

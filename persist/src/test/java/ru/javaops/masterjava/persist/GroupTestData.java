@@ -16,10 +16,10 @@ public class GroupTestData {
     public static List<Group> FULL_GROUPS;
 
     public static void init() {
-        TJ6 = new Group(1, "TopJava 6", 2);
-        TJ7 = new Group(2, "TopJava 7", 2);
-        TJ8 = new Group(3, "TopJava 8", 2);
-        MJ1 = new Group(4, "MasterJava 1", 3);
+        TJ6 = new Group("TopJava 6", 2);
+        TJ7 = new Group("TopJava 7", 2);
+        TJ8 = new Group("TopJava 8", 2);
+        MJ1 = new Group("MasterJava 1", 3);
         GROUPS = ImmutableList.of(TJ6, TJ7, TJ8);
         FULL_GROUPS = ImmutableList.of(TJ6, TJ7, TJ8, MJ1);
     }

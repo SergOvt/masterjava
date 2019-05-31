@@ -58,8 +58,10 @@ public class UserProcessor {
         val unmarshaller = jaxbParser.createUnmarshaller();
 
         while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
+            String city = processor.getAttribute("city");
             ru.javaops.masterjava.xml.schema.User xmlUser = unmarshaller.unmarshal(processor.getReader(), ru.javaops.masterjava.xml.schema.User.class);
-            final User user = new User(id++, xmlUser.getValue(), xmlUser.getEmail(), UserFlag.valueOf(xmlUser.getFlag().value()));
+            final User user = new User(id++, xmlUser.getValue(), xmlUser.getEmail(),
+                    UserFlag.valueOf(xmlUser.getFlag().value()), city);
             chunk.add(user);
             if (chunk.size() == chunkSize) {
                 addChunkFutures(chunkFutures, chunk);

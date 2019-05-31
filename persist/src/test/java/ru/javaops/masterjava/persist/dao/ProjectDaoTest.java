@@ -15,8 +15,8 @@ import static ru.javaops.masterjava.persist.ProjectTestData.PROJECTS;
 
 public class ProjectDaoTest extends AbstractDaoTest<ProjectDao> {
 
-    protected ProjectDaoTest(Class<ProjectDao> projectDaoClass) {
-        super(projectDaoClass);
+    public ProjectDaoTest() {
+        super(ProjectDao.class);
     }
 
     @BeforeClass
@@ -26,11 +26,11 @@ public class ProjectDaoTest extends AbstractDaoTest<ProjectDao> {
 
     @Before
     public void setUp() throws Exception {
-        ProjectTestData.setUp();
+        ProjectTestData.setUp(false);
     }
 
     @Test
-    public void getWithLimit() {
+    public void getAll() {
         List<Project> projects = dao.getAll();
         Assert.assertEquals(PROJECTS, projects);
     }

@@ -1,6 +1,7 @@
 package ru.javaops.masterjava.persist.model;
 
 
+import com.bertoncelj.jdbi.entitymapper.Column;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,11 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor
 public class City extends BaseEntity {
     private @NonNull String name;
+    @Column("short_name")
+    private @NonNull String shortName;
 
-    public City(Integer id, String name) {
-        this(name);
+    public City(Integer id, String name, String shortName) {
+        this(name, shortName);
         this.id = id;
     }
 }

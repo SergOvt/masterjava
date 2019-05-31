@@ -15,8 +15,8 @@ import static ru.javaops.masterjava.persist.CityTestData.KIV;
 
 public class CityDaoTest extends AbstractDaoTest<CityDao> {
 
-    protected CityDaoTest(Class<CityDao> cityDaoClass) {
-        super(cityDaoClass);
+    public CityDaoTest() {
+        super(CityDao.class);
     }
 
     @BeforeClass
@@ -26,11 +26,11 @@ public class CityDaoTest extends AbstractDaoTest<CityDao> {
 
     @Before
     public void setUp() throws Exception {
-        CityTestData.setUp();
+        CityTestData.setUp(false);
     }
 
     @Test
-    public void getWithLimit() {
+    public void getAll() {
         List<City> cities = dao.getAll();
         Assert.assertEquals(CITIES, cities);
     }

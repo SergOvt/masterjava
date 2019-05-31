@@ -17,16 +17,20 @@ public class ProjectTestData {
     public static void init() {
         BJ = new Project(1, "Base Java");
         TJ = new Project(2, "Top Java");
-        MJ = new Project(2, "Master Java");
+        MJ = new Project(3, "Master Java");
         PROJECTS = ImmutableList.of(BJ, TJ);
-        FULL_PROJECTS = ImmutableList.of(BJ, TJ, MJ);
+        FULL_PROJECTS = ImmutableList.of(BJ, MJ, TJ);
     }
 
-    public static void setUp() {
+    public static void setUp(boolean isFull) {
         ProjectDao dao = DBIProvider.getDao(ProjectDao.class);
         dao.clean();
         DBIProvider.getDBI().useTransaction((conn, status) -> {
-               PROJECTS.forEach(dao::insert);
+               if (isFull) {
+                   FULL_PROJECTS.forEach(dao::insertWithId);
+               } else {
+                   PROJECTS.forEach(dao::insertWithId);
+               }
         });
     }
 }

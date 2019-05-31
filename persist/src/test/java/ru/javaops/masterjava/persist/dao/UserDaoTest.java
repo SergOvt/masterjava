@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import ru.javaops.masterjava.persist.CityTestData;
 import ru.javaops.masterjava.persist.UserTestData;
 import ru.javaops.masterjava.persist.model.User;
 
@@ -19,7 +20,9 @@ public class UserDaoTest extends AbstractDaoTest<UserDao> {
 
     @BeforeClass
     public static void init() throws Exception {
+        CityTestData.init();
         UserTestData.init();
+        CityTestData.setUp(true);
     }
 
     @Before

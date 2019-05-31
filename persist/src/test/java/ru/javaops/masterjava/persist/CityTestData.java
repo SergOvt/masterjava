@@ -15,18 +15,22 @@ public class CityTestData {
     public static List<City> FULL_CITIES;
 
     public static void init() {
-        MSK = new City(1, "Moscow");
-        SPB = new City(2, "Saint-Petersburg");
-        KIV = new City(3, "Kiev");
+        MSK = new City("Moscow", "mov");
+        SPB = new City("Saint-Petersburg", "spb");
+        KIV = new City("Kiev", "kiv");
         CITIES = ImmutableList.of(MSK, SPB);
-        FULL_CITIES = ImmutableList.of(MSK, SPB, KIV);
+        FULL_CITIES = ImmutableList.of(KIV, MSK, SPB);
     }
 
-    public static void setUp() {
+    public static void setUp(boolean isFull) {
         CityDao dao = DBIProvider.getDao(CityDao.class);
         dao.clean();
         DBIProvider.getDBI().useTransaction((conn, status) -> {
-               CITIES.forEach(dao::insert);
+               if (isFull) {
+                   FULL_CITIES.forEach(dao::insert);
+               } else {
+                   CITIES.forEach(dao::insert);
+               }
         });
     }
 }

@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.javaops.masterjava.persist.GroupTestData;
+import ru.javaops.masterjava.persist.ProjectTestData;
 import ru.javaops.masterjava.persist.model.Group;
 
 import java.util.List;
@@ -15,13 +16,15 @@ import static ru.javaops.masterjava.persist.GroupTestData.MJ1;
 
 public class GroupDaoTest extends AbstractDaoTest<GroupDao> {
 
-    protected GroupDaoTest(Class<GroupDao> groupDaoClass) {
-        super(groupDaoClass);
+    public GroupDaoTest() {
+        super(GroupDao.class);
     }
 
     @BeforeClass
     public static void init() throws Exception {
+        ProjectTestData.init();
         GroupTestData.init();
+        ProjectTestData.setUp(true);
     }
 
     @Before
@@ -30,7 +33,7 @@ public class GroupDaoTest extends AbstractDaoTest<GroupDao> {
     }
 
     @Test
-    public void getWithLimit() {
+    public void getAll() {
         List<Group> groups = dao.getAll();
         Assert.assertEquals(GROUPS, groups);
     }

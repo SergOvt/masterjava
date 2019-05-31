@@ -27,10 +27,12 @@ public class CityProcessor {
 
         if (processor.doUntil(XMLEvent.START_ELEMENT, "Cities")) {
             Payload.Cities xmlCities =  unmarshaller.unmarshal(processor.getReader(), Payload.Cities.class);
-            cityDao.insertBatch(xmlCities.getCity()
+            cityDao.insertBatch(
+                    xmlCities.getCity()
                     .stream()
-                    .map(cityType -> new City(cityType.getValue()))
-                    .collect(Collectors.toList()));
+                    .map(cityType -> new City(cityType.getValue(), cityType.getId()))
+                    .collect(Collectors.toList())
+            );
         }
     }
 }
