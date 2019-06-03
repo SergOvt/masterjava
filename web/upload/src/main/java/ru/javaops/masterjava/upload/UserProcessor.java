@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.dao.UserDao;
+import ru.javaops.masterjava.persist.model.City;
 import ru.javaops.masterjava.persist.model.User;
 import ru.javaops.masterjava.persist.model.type.UserFlag;
 import ru.javaops.masterjava.upload.PayloadProcessor.FailedEmails;
@@ -43,8 +44,10 @@ public class UserProcessor {
         int id = userDao.getSeqAndSkip(chunkSize);
         List<User> chunk = new ArrayList<>(chunkSize);
         val unmarshaller = jaxbParser.createUnmarshaller();
+        List<FailedEmails> failed = new ArrayList<>();
 
         while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
+            String cityRef = processor.getAttribute("city");  // unmarshal doesn't get city ref
             ru.javaops.masterjava.xml.schema.User xmlUser = unmarshaller.unmarshal(processor.getReader(), ru.javaops.masterjava.xml.schema.User.class);
             if (cities.get(cityRef) == null) {
                 failed.add(new FailedEmails(xmlUser.getEmail(), "City '" + cityRef + "' is not present in DB"));
@@ -63,7 +66,6 @@ public class UserProcessor {
             addChunkFutures(chunkFutures, chunk);
         }
 
-        List<FailedEmails> failed = new ArrayList<>();
         List<String> allAlreadyPresents = new ArrayList<>();
         chunkFutures.forEach((emailRange, future) -> {
             try {
